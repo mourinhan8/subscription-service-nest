@@ -5,7 +5,10 @@ const SubscriberSchema = new Schema(
     name: String,
     email: String,
   },
-  { timestamps: true },
+  { 
+    collection: 'Subscriber',
+    timestamps: true 
+  },
 );
 
 export { SubscriberSchema };

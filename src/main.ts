@@ -14,30 +14,30 @@ async function bootstrap() {
   //   },
   // });
 
-  // const user = configService.get('RABBITMQ_USER');
-  // const password = configService.get('RABBITMQ_PASSWORD');
-  // const host = configService.get('RABBITMQ_HOST');
-  // const queueName = configService.get('RABBITMQ_QUEUE_NAME');
-
-  // await app.connectMicroservice<MicroserviceOptions>({
-  //   transport: Transport.RMQ,
-  //   options: {
-  //     urls: [`amqp://${user}:${password}@${host}`],
-  //     queue: queueName,
-  //     queueOptions: {
-  //       durable: true,
-  //     },
-  //   },
-  // });
+  const user = configService.get('RABBITMQ_USER');
+  const password = configService.get('RABBITMQ_PASSWORD');
+  const host = configService.get('RABBITMQ_HOST');
+  const queueName = configService.get('RABBITMQ_QUEUE_NAME');
 
   await app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.GRPC,
+    transport: Transport.RMQ,
     options: {
-      package: 'subscribers',
-      protoPath: join(process.cwd(), 'src/subscriber/subscribers.proto'),
-      url: configService.get('GRPC_CONNECTION_URL'),
+      urls: [`amqp://${user}:${password}@${host}`],
+      queue: queueName,
+      queueOptions: {
+        durable: true,
+      },
     },
   });
+
+  // await app.connectMicroservice<MicroserviceOptions>({
+  //   transport: Transport.GRPC,
+  //   options: {
+  //     package: 'subscribers',
+  //     protoPath: join(process.cwd(), 'src/subscriber/subscribers.proto'),
+  //     url: configService.get('GRPC_CONNECTION_URL'),
+  //   },
+  // });
 
   // await app.listen(3000);
   await app.startAllMicroservices();
